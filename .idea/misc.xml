@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/fragment_notification.xml" value="0.11820652173913043" />
+        <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/item_alarm.xml" value="0.125" />
         <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/time.xml" value="0.1" />
-        <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/time_picker_fragment.xml" value="0.125" />
+        <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/time_picker_fragment.xml" value="0.165" />
       </map>
     </option>
   </component>

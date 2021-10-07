@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_8"
+        android:background="@color/black">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_8">
+
+            <TextView
+                android:id="@+id/display_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hour"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_text_40" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_text_40"
+                android:text="@string/colon"/>
+
+
+            <TextView
+                android:id="@+id/display_minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minute"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_text_40" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_text_28"
+                android:text="@string/am"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/alarmSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimen_8"
+            android:layout_centerVertical="true"
+            app:thumbTint="@color/blue"/>
+
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
