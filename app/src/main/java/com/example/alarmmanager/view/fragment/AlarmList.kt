@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,15 +45,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addAlarm.setOnClickListener {
-            Log.d("TAG", "onViewCreated: $hour\t$minute ")
-            getTime()
-            Log.d("TAG", "onViewCreated: $hour\t$minute ")
-            TimePickerDialog(requireContext(), this, hour, minute, true).show()
-            val alarm = Alarm(id = 0, hour = hour, minute = minute)
-            viewModel.addAlarm(alarm)
-            Toast.makeText(requireContext(), "Successfully added", Toast.LENGTH_SHORT).show()
-        }
+        pickTime()
 
         val recyclerView: RecyclerView = binding.alarmList
         recyclerView.layoutManager =
@@ -70,6 +61,25 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
         })
     }
 
+
+    //get instance to current time and date
+    private fun getTime() {
+        val cal = Calendar.getInstance()
+
+        hour = cal.get(Calendar.HOUR)
+        minute = cal.get(Calendar.MINUTE)
+        timeOfDay = cal.get(Calendar.AM_PM)
+    }
+
+    //select time for the alarm
+    private fun pickTime() {
+        binding.addAlarm.setOnClickListener {
+            getTime()
+            Log.d("TAG", "onViewCreated: $hour\t$minute ")
+            TimePickerDialog(requireContext(), this, hour, minute, true).show()
+        }
+    }
+
     override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
         val cal = Calendar.getInstance()
         savedHour = p1
@@ -79,18 +89,12 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
         cal.set(Calendar.MINUTE, savedMinute)
         cal.set(Calendar.SECOND, 0)
 
-        updateTimeText(cal)
+        val alarm = Alarm(id = 0, hour = savedHour, minute = savedMinute)
+
+        setTime(alarm)
     }
 
-    private fun getTime() {
-        val cal = Calendar.getInstance()
-
-        hour = cal.get(Calendar.HOUR)
-        minute = cal.get(Calendar.MINUTE)
-        timeOfDay = cal.get(Calendar.AM_PM)
-    }
-
-    private fun updateTimeText(cal: Calendar) {
-
+    private fun setTime(alarm: Alarm) {
+        viewModel.addAlarm(alarm)
     }
 }
