@@ -8,36 +8,36 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.util.Log
 import com.example.alarmmanager.R
+import com.example.alarmmanager.service.AlarmService
 import java.util.*
-import android.content.pm.PackageManager
 
-
-
-
-private const val TAG = "AlarmReceiver"
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    private lateinit var context: Context
     private lateinit var alarmManager: AlarmManager
+    private var TAG = "AlarmReceiver"
 
     override fun onReceive(p0: Context?, p1: Intent?) {
         Log.d(TAG, "onReceive: " + Date().toString())
-
-
-        val pm = p0?.packageManager
-        val launchIntent = pm?.getLaunchIntentForPackage("com.example.alarmmanager")
-        launchIntent!!.putExtra("some_data", "value")
-        p0.startActivity(launchIntent)
-
-        //notification
-//        val channelID = 1
-//        val builder  = NotificationCompat.Builder(p0, channelID)
 
         //alarm tone
         val mediaPlayer = MediaPlayer.create(p0, R.raw.alarm_tone)
         mediaPlayer.isLooping = true
         mediaPlayer.start()
+
+        /*p0?.let {
+            p1?.let { startAlarmService(p0, it) }
+        }*/
+
+    }
+
+    private fun startAlarmService(
+        context: Context,
+        intent: Intent
+    ) {
+        val intent = Intent(context, AlarmService::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
     }
 
     fun startAlarm(context: Context) {

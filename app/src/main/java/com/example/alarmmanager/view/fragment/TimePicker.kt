@@ -14,13 +14,14 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.core.content.getSystemService
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
+import com.example.alarmmanager.R
 import com.example.alarmmanager.databinding.TimePickerFragmentBinding
 import com.example.alarmmanager.receiver.AlarmReceiver
 import com.example.alarmmanager.service.AlarmService
 import java.text.DateFormat
 import java.util.*
 
-private const val TAG = "TimePicker`"
 class TimePicker : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
     private lateinit var binding: TimePickerFragmentBinding
@@ -47,6 +48,10 @@ class TimePicker : DialogFragment(), TimePickerDialog.OnTimeSetListener {
         binding.start.setOnClickListener {
             Toast.makeText(requireContext(), "Button pressed", Toast.LENGTH_SHORT).show()
             alarmReceiver.startAlarm(requireContext())
+        }
+
+        binding.alarmRecycler.setOnClickListener {
+            findNavController().navigate(R.id.action_timePicker_to_alarmList2)
         }
 
         return binding.root
@@ -86,4 +91,5 @@ class TimePicker : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
         binding.textView.text = timeText
     }
+
 }

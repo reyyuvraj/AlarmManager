@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/drawable/ic_baseline_add_28.xml" value="0.16296296296296298" />
         <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/alarm_list.xml" value="0.125" />
         <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/fragment_notification.xml" value="0.11820652173913043" />
         <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/item_alarm.xml" value="0.125" />
         <entry key="..\:/Users/reyyu/AndroidStudioProjects/AlarmManager/app/src/main/res/layout/time.xml" value="0.1" />

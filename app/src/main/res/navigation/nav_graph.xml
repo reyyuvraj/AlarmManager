@@ -9,5 +9,14 @@
         android:id="@+id/timePicker"
         android:name="com.example.alarmmanager.view.fragment.TimePicker"
         android:label="TimePicker"
-        tools:layout="@layout/time_picker_fragment"/>
+        tools:layout="@layout/time_picker_fragment">
+        <action
+            android:id="@+id/action_timePicker_to_alarmList2"
+            app:destination="@id/alarmList2" />
+    </fragment>
+    <fragment
+        android:id="@+id/alarmList2"
+        android:name="com.example.alarmmanager.view.fragment.AlarmList"
+        android:label="alarm_list"
+        tools:layout="@layout/alarm_list" />
 </navigation>

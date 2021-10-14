@@ -9,5 +9,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "alarm_table")
 data class Alarm (
     @PrimaryKey(autoGenerate = true)
-    val id: Int
+    val id: Int,
+    val hour: Int,
+    val minute: Int
 ) : Parcelable
