@@ -17,14 +17,15 @@ class AlarmService: Service() {
         super.onCreate()
 
         //alarm tone
-        val mediaPlayer = MediaPlayer.create(this, R.raw.alarm_tone)
-        mediaPlayer.isLooping = true
-        mediaPlayer.start()
-
 
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        val mediaPlayer = MediaPlayer.create(this, R.raw.alarm_tone)
+        mediaPlayer.isLooping = true
+        mediaPlayer.start()
+
         return super.onStartCommand(intent, flags, startId)
     }
 

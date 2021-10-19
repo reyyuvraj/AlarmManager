@@ -11,5 +11,7 @@ data class Alarm (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val hour: Int,
-    val minute: Int
+    val minute: Int,
+    val amPM: String,
+    val switchState: Boolean
 ) : Parcelable

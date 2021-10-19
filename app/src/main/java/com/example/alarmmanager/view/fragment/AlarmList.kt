@@ -1,6 +1,10 @@
 package com.example.alarmmanager.view.fragment
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.alarmmanager.databinding.AlarmListBinding
 import com.example.alarmmanager.model.Alarm
+import com.example.alarmmanager.receiver.AlarmReceiver
 import com.example.alarmmanager.view.adapter.AlarmAdapter
 import com.example.alarmmanager.viewmodel.ViewModel
 import java.util.*
@@ -25,10 +30,11 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     var hour = 0
     var minute = 0
-    var timeOfDay = 0
+    var amOrPM = "AM"
 
     var savedHour = 0
     var savedMinute = 0
+    var savedAmOrPm = "AM"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,15 +74,24 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
 
         hour = cal.get(Calendar.HOUR)
         minute = cal.get(Calendar.MINUTE)
-        timeOfDay = cal.get(Calendar.AM_PM)
+        amOrPM = cal.get(Calendar.AM_PM).toString()
+        Log.d(
+            "TAG",
+            "getTime: $hour\t$minute\t$amOrPM\t${cal.get(Calendar.AM)}\t${cal.get(Calendar.PM)}"
+        )
+
+        if (cal.get(Calendar.AM_PM) == Calendar.AM)
+            amOrPM = "AM";
+        else if (cal.get(Calendar.AM_PM) == Calendar.PM)
+            amOrPM = "PM";
     }
 
     //select time for the alarm
     private fun pickTime() {
         binding.addAlarm.setOnClickListener {
             getTime()
-            Log.d("TAG", "onViewCreated: $hour\t$minute ")
-            TimePickerDialog(requireContext(), this, hour, minute, true).show()
+            Log.d("TAG", "onViewCreated: $hour\t$minute\t$amOrPM ")
+            TimePickerDialog(requireContext(), this, hour, minute, false).show()
         }
     }
 
@@ -84,17 +99,54 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
         val cal = Calendar.getInstance()
         savedHour = p1
         savedMinute = p2
+        savedAmOrPm = if (savedHour > 12)
+            "PM"
+        else
+            "AM"
+        Log.d("TAG", "onTimeSet: $savedHour\t$savedMinute\t$savedAmOrPm")
+
 
         cal.set(Calendar.HOUR_OF_DAY, savedHour)
         cal.set(Calendar.MINUTE, savedMinute)
         cal.set(Calendar.SECOND, 0)
 
-        val alarm = Alarm(id = 0, hour = savedHour, minute = savedMinute)
+        savedHour = if (savedHour > 12) savedHour - 12 else savedHour
+        val alarm = Alarm(
+            id = 0,
+            hour = savedHour,
+            minute = savedMinute,
+            amPM = savedAmOrPm,
+            switchState = true
+        )
 
         setTime(alarm)
+        startAlarm(cal, requireContext())
     }
 
     private fun setTime(alarm: Alarm) {
         viewModel.addAlarm(alarm)
+    }
+
+    private fun startAlarm(calendar: Calendar, context: Context) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(requireContext(), AlarmReceiver::class.java)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(requireContext(), 1, intent, 0)
+
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1)
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+    }
+
+
+    private fun cancelAlarm(calendar: Calendar, context: Context) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(requireContext(), AlarmReceiver::class.java)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(requireContext(), 1, intent, 0)
+
+        alarmManager.cancel(pendingIntent)
     }
 }

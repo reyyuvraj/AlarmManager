@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.alarmmanager.R
 import com.example.alarmmanager.model.Alarm
@@ -27,8 +28,13 @@ class AlarmAdapter(private val context: Context) : RecyclerView.Adapter<AlarmAda
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val single = alarmList[position]
-        holder.hour.text = single.hour.toString()
-        holder.minutes.text = single.minute.toString()
+        holder.hour.text = convertTime(single.hour.toString().toInt())
+        holder.minutes.text = convertTime(single.minute.toString().toInt())
+        holder.amPm.text = single.amPM
+        holder.switch.isChecked = true
+
+        holder.switch.setOnCheckedChangeListener { compoundButton, b ->  }
+
     }
 
     override fun getItemCount(): Int {
@@ -39,6 +45,15 @@ class AlarmAdapter(private val context: Context) : RecyclerView.Adapter<AlarmAda
         val hour: TextView = itemView.findViewById(R.id.display_hour)
         val minutes: TextView = itemView.findViewById(R.id.display_minute)
         val amPm: TextView = itemView.findViewById(R.id.display_AmOrPm)
+        val switch: SwitchCompat = itemView.findViewById(R.id.alarmSwitch)
+    }
+
+    private fun convertTime(input: Int): String {
+        return if (input >= 10) {
+            input.toString()
+        } else {
+            "0$input"
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
