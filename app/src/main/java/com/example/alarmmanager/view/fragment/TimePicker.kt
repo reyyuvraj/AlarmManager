@@ -46,7 +46,6 @@ class TimePicker : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
         binding.start.setOnClickListener {
             Toast.makeText(requireContext(), "Button pressed", Toast.LENGTH_SHORT).show()
-            alarmReceiver.startAlarm(requireContext())
         }
 
         binding.alarmRecycler.setOnClickListener {
