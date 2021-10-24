@@ -16,24 +16,11 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, p1: Intent?) {
 
-        /*    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                context.startForegroundService(intent);
-            } else {
-                context.startService(intent);
-            }*/
-
         Log.d(TAG, "onReceive: " + Date().toString())
-
-
-        //alarm tone
-        /*val mediaPlayer = MediaPlayer.create(context, R.raw.alarm_tone)
-        mediaPlayer.isLooping = true
-        mediaPlayer.start()*/
 
         context?.let {
             p1?.let { startAlarmService(context, it) }
         }
-
     }
 
     private fun startAlarmService(

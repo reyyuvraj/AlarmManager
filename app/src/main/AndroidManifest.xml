@@ -19,6 +19,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,8 +35,10 @@
         </receiver>
 
         <receiver android:name=".receiver.AlarmReceiver" />
+        <receiver android:name=".receiver.CancelReceiver"/>
 
         <service android:name=".service.AlarmService" />
+        <service android:name=".service.CancelService"/>
     </application>
 
 </manifest>

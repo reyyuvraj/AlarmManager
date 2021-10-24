@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -14,6 +13,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.alarmmanager.R
 import com.example.alarmmanager.receiver.AlarmReceiver
+import com.example.alarmmanager.receiver.CancelReceiver
 
 class AlarmService : Service() {
 
@@ -24,9 +24,9 @@ class AlarmService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        uri =RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+        uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
 
-        ringtone =RingtoneManager.getRingtone(applicationContext, uri)
+        ringtone = RingtoneManager.getRingtone(applicationContext, uri)
         //alarm tone
 
     }
@@ -36,15 +36,15 @@ class AlarmService : Service() {
         val channelId = "basic"
         val channelName = "Alarm"
 
-        val notificationIntent =
-            Intent(this, AlarmReceiver::class.java)//a different class is supposed to be used here
+        val cancelIntent =
+            Intent(this, CancelReceiver::class.java)//a different class is supposed to be used here
 
 
-        val pendingIntent = PendingIntent.getActivity(
+        val cancelPendingIntent = PendingIntent.getBroadcast(
             this,
-            0,
-            notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            3,
+            cancelIntent,
+            0
         )
 
         val notification =
@@ -55,6 +55,7 @@ class AlarmService : Service() {
                 .setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .addAction(R.drawable.ic_baseline_cancel_24, "Cancel alarm", cancelPendingIntent)
                 .build()
 
         val notificationManager =
@@ -74,8 +75,13 @@ class AlarmService : Service() {
         mediaPlayer.start()*/
 
         startForeground(2, notification)
+        stopService(cancelIntent)
 
         return START_STICKY
+    }
+
+    override fun stopService(name: Intent?): Boolean {
+        return super.stopService(name)
     }
 
     override fun onDestroy() {
