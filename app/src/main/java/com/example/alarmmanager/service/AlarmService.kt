@@ -12,8 +12,8 @@ import android.net.Uri
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.alarmmanager.R
-import com.example.alarmmanager.receiver.AlarmReceiver
 import com.example.alarmmanager.receiver.CancelReceiver
+import com.example.alarmmanager.receiver.SnoozeReceiver
 
 class AlarmService : Service() {
 
@@ -39,11 +39,20 @@ class AlarmService : Service() {
         val cancelIntent =
             Intent(this, CancelReceiver::class.java)//a different class is supposed to be used here
 
+        val snoozeIntent =
+            Intent(this, SnoozeReceiver::class.java)
 
         val cancelPendingIntent = PendingIntent.getBroadcast(
             this,
             3,
             cancelIntent,
+            0
+        )
+
+        val snoozePendingIntent = PendingIntent.getBroadcast(
+            this,
+            129,
+            snoozeIntent,
             0
         )
 
@@ -56,6 +65,7 @@ class AlarmService : Service() {
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .addAction(R.drawable.ic_baseline_cancel_24, "Cancel alarm", cancelPendingIntent)
+                .addAction(R.drawable.ic_baseline_snooze_24, "Snooze Alarm", snoozePendingIntent)
                 .build()
 
         val notificationManager =
@@ -74,7 +84,7 @@ class AlarmService : Service() {
         mediaPlayer.isLooping = true
         mediaPlayer.start()*/
 
-        startForeground(2, notification)
+        startForeground((1 + System.currentTimeMillis()).toInt(), notification)
         stopService(cancelIntent)
 
         return START_STICKY

@@ -21,12 +21,13 @@ import com.example.alarmmanager.receiver.AlarmReceiver
 import com.example.alarmmanager.view.adapter.AlarmAdapter
 import com.example.alarmmanager.viewmodel.ViewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
-class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
+class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.DeleteAnAlarmInterface {
 
     private lateinit var binding: AlarmListBinding
     private lateinit var adapter: AlarmAdapter
-    private lateinit var viewModel: ViewModel
+    private lateinit var yViewModel: ViewModel
 
     var hour = 0
     var minute = 0
@@ -43,7 +44,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
     ): View {
         binding = AlarmListBinding.inflate(layoutInflater)
 
-        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        yViewModel = ViewModelProvider(this).get(ViewModel::class.java)
 
         return binding.root
     }
@@ -57,16 +58,15 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        adapter = AlarmAdapter(requireContext())
+        adapter = AlarmAdapter(requireContext(),this)
         recyclerView.adapter = adapter
 
-        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        yViewModel = ViewModelProvider(this).get(ViewModel::class.java)
 
-        viewModel.readAllData.observe(viewLifecycleOwner, {
-            adapter.setData(it)
+        yViewModel.readAllData.observe(viewLifecycleOwner, {
+            adapter.setData(it as ArrayList<Alarm>)
         })
     }
-
 
     //get instance to current time and date
     private fun getTime() {
@@ -124,7 +124,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
     }
 
     private fun setTime(alarm: Alarm) {
-        viewModel.addAlarm(alarm)
+        yViewModel.addAlarm(alarm)
     }
 
     private fun startAlarm(calendar: Calendar, context: Context) {
@@ -148,5 +148,13 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener {
             PendingIntent.getBroadcast(requireContext(), 1, intent, 0)
 
         alarmManager.cancel(pendingIntent)
+    }
+
+    private fun deleteAlarmDialogItem(alarm: Alarm){
+        yViewModel.deleteAlarm(alarm)
+    }
+
+    override fun deletionOfAlarm(alarm: Alarm) {
+        deleteAlarmDialogItem(alarm)
     }
 }
