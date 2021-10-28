@@ -14,7 +14,11 @@ import com.example.alarmmanager.R
 import com.example.alarmmanager.model.Alarm
 import kotlinx.android.synthetic.main.item_alarm.view.*
 
-class AlarmAdapter(private val context: Context, private val clickListen: DeleteAnAlarmInterface) :
+class AlarmAdapter(
+    private val context: Context,
+    private val clickListen: DeleteAnAlarmInterface,
+    private val switchClick: CheckUncheckInterface
+) :
     RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
 
     private var alarmList: ArrayList<Alarm> = ArrayList()
@@ -22,6 +26,10 @@ class AlarmAdapter(private val context: Context, private val clickListen: Delete
 
     interface DeleteAnAlarmInterface {
         fun deletionOfAlarm(alarm: Alarm)
+    }
+
+    interface CheckUncheckInterface {
+        fun checkUncheckSwitch(alarm: Alarm, state: Boolean)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,14 +48,21 @@ class AlarmAdapter(private val context: Context, private val clickListen: Delete
         holder.hour.text = convertTime(single.hour.toString().toInt())
         holder.minutes.text = convertTime(single.minute.toString().toInt())
         holder.amPm.text = single.amPM
-        holder.switch.isChecked = true
+        holder.switch.isChecked = single.switchState
 
-        holder.switch.setOnCheckedChangeListener { compoundButton, b -> }
+        holder.switch.setOnCheckedChangeListener { _, b ->
+            single.switchState = switchStateChange(single, b)
+        }
 
         holder.itemView.alarmItem.setOnLongClickListener {
             deleteDialog(single)
             true
         }
+    }
+
+    private fun switchStateChange(alarm: Alarm, state: Boolean): Boolean {
+        switchClick.checkUncheckSwitch(alarm, state)
+        return state
     }
 
     private fun deleteDialog(alarm: Alarm) {

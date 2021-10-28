@@ -23,7 +23,7 @@ import com.example.alarmmanager.viewmodel.ViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.DeleteAnAlarmInterface {
+class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.DeleteAnAlarmInterface, AlarmAdapter.CheckUncheckInterface {
 
     private lateinit var binding: AlarmListBinding
     private lateinit var adapter: AlarmAdapter
@@ -58,7 +58,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        adapter = AlarmAdapter(requireContext(),this)
+        adapter = AlarmAdapter(requireContext(),this,this)
         recyclerView.adapter = adapter
 
         yViewModel = ViewModelProvider(this).get(ViewModel::class.java)
@@ -156,5 +156,10 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
 
     override fun deletionOfAlarm(alarm: Alarm) {
         deleteAlarmDialogItem(alarm)
+    }
+
+    override fun checkUncheckSwitch(alarm: Alarm, state: Boolean) {
+        val alarmUpdated = Alarm(alarm.id,alarm.hour,alarm.minute,alarm.amPM,state)
+        yViewModel.updateAlarm(alarmUpdated)
     }
 }

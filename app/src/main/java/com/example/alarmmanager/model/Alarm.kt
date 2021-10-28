@@ -13,5 +13,5 @@ data class Alarm (
     val hour: Int,
     val minute: Int,
     val amPM: String,
-    val switchState: Boolean
+    var switchState: Boolean
 ) : Parcelable

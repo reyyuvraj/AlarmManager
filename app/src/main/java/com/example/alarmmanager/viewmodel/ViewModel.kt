@@ -32,4 +32,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             repository.deleteAlarm(alarm)
         }
     }
+
+    fun updateAlarm(alarm: Alarm){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateAlarm(alarm)
+        }
+    }
 }
