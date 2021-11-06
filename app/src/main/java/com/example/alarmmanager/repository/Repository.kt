@@ -7,6 +7,7 @@ import com.example.alarmmanager.model.Alarm
 class Repository constructor(private val alarmDao: AlarmDao) {
 
     val readAllData: LiveData<List<Alarm>> = alarmDao.readAllData()
+    val alarmId: LiveData<Int> = alarmDao.alarmId()
 
     suspend fun addAlarm(alarm: Alarm) {
         alarmDao.addAlarm(alarm)

@@ -14,11 +14,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     val readAllData: LiveData<List<Alarm>>
     private val repository: Repository
+    val alarmId: LiveData<Int>
 
     init {
         val alarmDao = AlarmDatabase.getDatabase(application).alarmDao()
         repository = Repository(alarmDao)
         readAllData = repository.readAllData
+        alarmId = repository.alarmId
     }
 
     fun addAlarm(alarm: Alarm) {
@@ -27,13 +29,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteAlarm(alarm: Alarm){
+    fun deleteAlarm(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteAlarm(alarm)
         }
     }
 
-    fun updateAlarm(alarm: Alarm){
+    fun updateAlarm(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateAlarm(alarm)
         }

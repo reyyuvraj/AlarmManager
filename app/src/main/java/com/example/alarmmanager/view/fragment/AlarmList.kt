@@ -21,13 +21,14 @@ import com.example.alarmmanager.receiver.AlarmReceiver
 import com.example.alarmmanager.view.adapter.AlarmAdapter
 import com.example.alarmmanager.viewmodel.ViewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
-class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.DeleteAnAlarmInterface, AlarmAdapter.CheckUncheckInterface {
+class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener,
+    AlarmAdapter.DeleteAnAlarmInterface, AlarmAdapter.CheckUncheckInterface {
 
     private lateinit var binding: AlarmListBinding
     private lateinit var adapter: AlarmAdapter
     private lateinit var yViewModel: ViewModel
+    private var alarmId = 0
 
     var hour = 0
     var minute = 0
@@ -58,7 +59,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        adapter = AlarmAdapter(requireContext(),this,this)
+        adapter = AlarmAdapter(requireContext(), this, this)
         recyclerView.adapter = adapter
 
         yViewModel = ViewModelProvider(this).get(ViewModel::class.java)
@@ -99,7 +100,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
         val cal = Calendar.getInstance()
         savedHour = p1
         savedMinute = p2
-        savedAmOrPm = if (savedHour > 12)
+        savedAmOrPm = if (savedHour >= 12)
             "PM"
         else
             "AM"
@@ -119,6 +120,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
             switchState = true
         )
 
+
         setTime(alarm)
         startAlarm(cal, requireContext())
     }
@@ -128,10 +130,23 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
     }
 
     private fun startAlarm(calendar: Calendar, context: Context) {
+        yViewModel.alarmId.observe(viewLifecycleOwner, { id ->
+            alarmId = id ?: 0
+            Log.d("forID", "alarmId = $alarmId")
+        })
+        //Log.d("forAlarm", "startAlarm: ${alarm.id} && $id && $alarmId")
+        Log.d("forAlarm", "startAlarm: $alarmId")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
         val pendingIntent: PendingIntent =
-            PendingIntent.getBroadcast(requireContext(), 1, intent, 0)
+            PendingIntent.getBroadcast(
+                requireContext(),
+                alarmId,//(1 + System.currentTimeMillis()).toInt()
+                intent,
+                0
+            )
+
+        Log.d("start", "startAlarm: ${(1 + System.currentTimeMillis()).toInt()}")
 
         if (calendar.before(Calendar.getInstance())) {
             calendar.add(Calendar.DATE, 1)
@@ -150,7 +165,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
         alarmManager.cancel(pendingIntent)
     }
 
-    private fun deleteAlarmDialogItem(alarm: Alarm){
+    private fun deleteAlarmDialogItem(alarm: Alarm) {
         yViewModel.deleteAlarm(alarm)
     }
 
@@ -159,7 +174,7 @@ class AlarmList : Fragment(), TimePickerDialog.OnTimeSetListener, AlarmAdapter.D
     }
 
     override fun checkUncheckSwitch(alarm: Alarm, state: Boolean) {
-        val alarmUpdated = Alarm(alarm.id,alarm.hour,alarm.minute,alarm.amPM,state)
+        val alarmUpdated = Alarm(alarm.id, alarm.hour, alarm.minute, alarm.amPM, state)
         yViewModel.updateAlarm(alarmUpdated)
     }
 }
